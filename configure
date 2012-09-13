@@ -2109,10 +2109,10 @@ MYPCFILES="kyototycoon.pc"
 # Building flags
 MYCFLAGS="-Wall -ansi -pedantic -fPIC -fsigned-char -g0 -O2"
 MYCXXFLAGS="-Wall -fPIC -fsigned-char -g0 -O2"
-MYCPPFLAGS="-I. -I\$(INCLUDEDIR) -I/usr/local/include"
+MYCPPFLAGS="-I. -I\$(INCLUDEDIR)"
 MYCPPFLAGS="$MYCPPFLAGS -DNDEBUG -D_GNU_SOURCE=1"
 MYCPPFLAGS="$MYCPPFLAGS -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D__EXTENSIONS__"
-MYLDFLAGS="-L. -L\$(LIBDIR) -L/usr/local/lib"
+MYLDFLAGS="-L. -L\$(LIBDIR)"
 MYCMDLDFLAGS=""
 MYCMDLIBS=""
 MYLDLIBPATH=""
@@ -2121,9 +2121,9 @@ MYPOSTCMD="true"
 
 # Building paths
 PATH=".:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$PATH"
-CPATH=".:/usr/local/include:$CPATH"
-LIBRARY_PATH=".:/usr/local/lib:$LIBRARY_PATH"
-LD_LIBRARY_PATH=".:/usr/local/lib:$LD_LIBRARY_PATH"
+CPATH=".:$CPATH"
+LIBRARY_PATH=".:$LIBRARY_PATH"
+LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
 PKG_CONFIG_PATH=".:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH PKG_CONFIG_PATH
 
@@ -2250,16 +2250,16 @@ if test "$enable_lua" = "yes"
 then
   luaver=`lua -e 'v = string.gsub(_VERSION, ".* ", ""); print(v)'`
   MYCPPFLAGS="$MYCPPFLAGS -D_MYLUA"
-  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua$luaver -I/usr/local/include/lua$luaver"
-  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua -I/usr/local/include/lua"
-  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua$luaver -L/usr/local/lib/lua$luaver"
-  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua -L/usr/local/lib/lua"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua$luaver:/usr/local/lib/lua$luaver"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua:/usr/local/lib/lua"
-  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua$luaver:/usr/local/lib/lua$luaver"
-  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua:/usr/local/lib/lua"
-  CPATH="$CPATH:/usr/include/lua$luaver:/usr/local/include/lua$luaver"
-  CPATH="$CPATH:/usr/include/lua:/usr/local/include/lua"
+  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua$luaver"
+  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua"
+  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua$luaver"
+  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua"
+  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua$luaver"
+  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua"
+  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua$luaver"
+  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua"
+  CPATH="$CPATH:/usr/include/lua$luaver"
+  CPATH="$CPATH:/usr/include/lua"
   enables="$enables (lua)"
 fi
 
@@ -4557,7 +4557,7 @@ fi
 # As-needed linking
 if uname | grep Linux >config.tmp
 then
-  MYLDFLAGS="$MYLDFLAGS -Wl,-rpath-link,.:/usr/local/lib:$MYLDLIBPATH"
+  MYLDFLAGS="$MYLDFLAGS -Wl,-rpath-link,.:$MYLDLIBPATH"
   MYLDFLAGS="$MYLDFLAGS -Wl,--as-needed"
 else
   MYCMDLIBS="$MYCMDLIBS $LIBS"
@@ -4569,6 +4569,9 @@ fi
 # a new version was provieded with --with-kc.  We comment out
 # here and will have to remember when checking out new versions to
 # do the same. 
+#
+# note that we also remove /usr/local from the front of include and
+# link paths for a similar reason.
 #
 # Checking the version of Kyoto Cabinet with pkg-config
 # if type pkg-config >config.tmp 2>&1
