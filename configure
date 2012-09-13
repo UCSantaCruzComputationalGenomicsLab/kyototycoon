@@ -4563,18 +4563,25 @@ else
   MYCMDLIBS="$MYCMDLIBS $LIBS"
 fi
 
+# This test checks the system installation before the cabinet
+# installed with --with-kc.  This is a bug because it will
+# return an error if an old version is on the system even if
+# a new version was provieded with --with-kc.  We comment out
+# here and will have to remember when checking out new versions to
+# do the same. 
+#
 # Checking the version of Kyoto Cabinet with pkg-config
-if type pkg-config >config.tmp 2>&1
-then
-  printf 'checking Kyoto Cabinet by pkg-config... '
-  if pkg-config --atleast-version=1.2.65 kyotocabinet
-  then
-    printf 'yes\n'
-  else
-    printf 'no\n'
-    as_fn_error $? "required version of Kyoto Cabinet was not detected" "$LINENO" 5
-  fi
-fi
+# if type pkg-config >config.tmp 2>&1
+# then
+#   printf 'checking Kyoto Cabinet by pkg-config... '
+#  if pkg-config --atleast-version=1.2.65 kyotocabinet
+#  then
+#    printf 'yes\n'
+#  else
+#    printf 'no\n'
+#    as_fn_error $? "required version of Kyoto Cabinet was not detected" "$LINENO" 5
+#  fi
+# fi
 
 # Shared libraries
 if test "$enable_shared" != "no" && test "$enable_profile" != "yes"
